@@ -19,13 +19,17 @@
     "@angular/platform-browser": "~13.2.2",
     "@angular/platform-browser-dynamic": "~13.2.2",
     "@angular/router": "~13.2.2",
-    "@capacitor/app": "1.1.1",
+    "@capacitor/android": "3.4.3",
     "@capacitor/core": "3.4.3",
+    "@capacitor/geolocation": "^1.3.1",
     "@capacitor/haptics": "1.1.4",
     "@capacitor/keyboard": "1.2.2",
     "@capacitor/status-bar": "1.0.8",
     "@ionic/angular": "^6.0.0",
+    "capacitor-background-location": "^1.3.33",
+    "leaflet.offline": "^2.2.0",
     "rxjs": "~6.6.0",
+    "satellite-count": "file:../satellite-count",
     "tslib": "^2.2.0",
     "zone.js": "~0.11.4"
   },
@@ -62,5 +66,10 @@
     "ts-node": "~8.3.0",
     "typescript": "~4.4.4"
   },
-  "description": "An Ionic project"
+  "description": "An Ionic project",
+  "cordova": {
+    "plugins": {
+      "cordova-plugin-background-geolocation": {}
+    }
+  }
 }
