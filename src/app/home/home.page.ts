@@ -5,7 +5,8 @@ import 'leaflet.offline';
 import { urlTemplate } from '../service/url-const.service';
 import storageLayer from '../service/storage.service';
 import { Satellite } from 'satellite-count';
-import {CapacitorBackgroundLocation,EVENTS,LOCATION_PRIORITY_ANDROID  } from 'capacitor-background-location';
+import { CapacitorBackgroundLocation, EVENTS } from 'capacitor-background-location';
+import { LeafletMapService } from '../service/leaflet-map.service';
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -17,63 +18,18 @@ export class HomePage {
   result: any = 0;
   outPut: any;
   loc: any;
-  e:Event
+  e: Event
   constructor(private ngZone: NgZone) { }
-   
+
 
   ngOnInit() {
     this.watchCurrentPosition()
   }
   ionViewDidEnter() {
-    this.leafletMap();
+    //this.leafletMap();
+    LeafletMapService.leafletMapMethod(this.map, this.latitud, this.longitud)
   }
-  leafletMap() {
-    //control de instanciación de mapa - cambiar coordenadas por zona cerca a usted
-    if (!this.map)
-      this.map = Leaflet.map('map').setView([22.3991033, -99.6069067], 16)
 
-
-    //añade el mapa y ubica botones de guardado y borrado  
-    let baseLayer = Leaflet.tileLayer
-      .offline(urlTemplate, {
-        attribution: 'Map data {attribution.OpenStreetMap}',
-        subdomains: 'abc',
-        minZoom: 13,
-      }).addTo(this.map);
-
-    this.map?.locate({ setView: true, enableHighAccuracy: true, maxZoom: 20 })
-
-    if (!this.control) {
-      this.control = Leaflet.control.savetiles(baseLayer, {
-        zoomlevels: [13, 16], // niveles de zoom a guardar OJO: no exceder de 16 por políticas de uso de OSM
-        confirm(layer, successCallback) {
-          // eslint-disable-next-line no-alert
-          if (window.confirm(`Guardar ${layer._tilesforSave.length}`)) {
-            successCallback();
-          }
-        },
-        confirmRemoval(layer, successCallback) {
-          // eslint-disable-next-line no-alert
-          if (window.confirm('Eliminar todos los mosaicos?')) {
-            successCallback();
-          }
-        },
-        saveText:
-          '<ion-icon name="save-outline"></i>',
-        rmText: '<ion-icon name="trash-outline"></i>',
-      });
-      this.control.addTo(this.map);
-
-      // layer switcher control
-      let layerswitcher = Leaflet.control
-        .layers({
-          'OSM (offline)': baseLayer,
-        }, null, { collapsed: false })
-        .addTo(this.map);
-      // add storage overlay
-      storageLayer(baseLayer, layerswitcher);
-    }
-  }
   watchCurrentPosition = async () => {
     try {
       Geolocation.watchPosition({ enableHighAccuracy: true, timeout: 100, maximumAge: 200 }, (position, err) => {
@@ -117,14 +73,9 @@ export class HomePage {
     this.result = this.pluginOutPut.result
   }
 
-  startBackgroundLocation = async () => {
-    /*let a = CapacitorBackgroundLocation.start({interval:1000,locationPriority:LOCATION_PRIORITY_ANDROID.PRIORITY_HIGH_ACCURACY})
-    console.log(a)*/
-    CapacitorBackgroundLocation.addListener(EVENTS.Change,(pos)=>{
-      console.log(pos)
-    })
-}
-
-
 
 }
+
+
+
+
